@@ -22,6 +22,16 @@ This package not included:
 
 Laravel Tailwind Authentication is powered by Blade and Tailwind.
 
+**Must read before install:**
+
+- The "routes/web.php" will be replaced.
+- The "routes/auth.php" will be placed.
+- The "HOME" path in *app/Providers/RouteServiceProvider.php* will be change from "/home" to "/"
+
+Please backup or rename your files before running the command below to prevent data loss.
+
+## Getting started
+
 Getting started couldn't be easier:
 
 ```bash
