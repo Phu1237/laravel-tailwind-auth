@@ -1,0 +1,39 @@
+{
+    "name": "phu1237/laravel-tailwind-auth",
+    "description": "Minimal Laravel authentication scaffolding with Blade and Tailwind.",
+    "keywords": ["laravel", "tailwind","auth"],
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/phu1237/laravel-tailwind-auth/issues",
+        "source": "https://github.com/phu1237/laravel-tailwind-auth"
+    },
+    "authors": [
+        {
+            "name": "Phu1237",
+            "email": "phu1237@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0",
+        "illuminate/filesystem": "^8.42",
+        "illuminate/support": "^8.42",
+        "illuminate/validation": "^8.42"
+    },
+    "autoload": {
+        "psr-4": {
+            "Phu1237\\TailwindAuth\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Phu1237\\TailwindAuth\\ServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
