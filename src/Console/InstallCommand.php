@@ -14,7 +14,8 @@ class InstallCommand extends Command
      * @var string
      */
     protected $signature = 'auth:install {--c|controllers : Install with controllers}
-                            {--e|empty : Install with controllers and empty blade}';
+                            {--e|empty : Install with controllers and empty blade}
+                            {--b|backup : Backup the old files if existed}';
 
     /**
      * The console command description.
@@ -41,6 +42,11 @@ class InstallCommand extends Command
             ] + $packages;
         });
 
+        // Backup if command have option backup
+        if ($this->option('backup')) {
+            $this->backupFilesAndDirectories();
+        }
+
         // Controllers...
         (new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers/Auth'));
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/App/Http/Controllers/Auth', app_path('Http/Controllers/Auth'));
@@ -49,28 +55,25 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(app_path('Http/Requests/Auth'));
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/App/Http/Requests/Auth', app_path('Http/Requests/Auth'));
 
-        // Views...
         // Just export if no option --controllers
-        if ($this->option('empty')) {
-            (new Filesystem)->ensureDirectoryExists(resource_path('views_empty/auth'));
-            (new Filesystem)->ensureDirectoryExists(resource_path('views_empty/layouts'));
-
-            (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views_empty/auth', resource_path('views/auth'));
-            (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views_empty/layouts', resource_path('views/layouts'));
-        } else if (!$this->option('controllers')) {
+        if (!$this->option('controllers')) {
+            // Views...
             (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
             (new Filesystem)->ensureDirectoryExists(resource_path('views/layouts'));
+            // Empty blade
+            if ($this->option('empty')) {
+                (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views_empty/auth', resource_path('views/auth'));
+                (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views_empty/layouts', resource_path('views/layouts'));
+            } else {
+                (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/auth', resource_path('views/auth'));
+                (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/layouts', resource_path('views/layouts'));
+            }
 
-            (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/auth', resource_path('views/auth'));
-            (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/layouts', resource_path('views/layouts'));
-        }
-
-        if (!$this->option('controllers')) {
             // Tests...
             (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/tests/Feature', base_path('tests/Feature'));
 
             // Routes...
-            copy(__DIR__.'/../../stubs/routes/web.php', base_path('routes/web.php'));
+            $this->appendToFile('require __DIR__.\'/auth.php\';', base_path('routes/web.php'));
             copy(__DIR__.'/../../stubs/routes/auth.php', base_path('routes/auth.php'));
 
             // Replace the HOME path to '/'
@@ -84,6 +87,32 @@ class InstallCommand extends Command
 
         $this->info('Tailwind Authentication scaffolding installed successfully.');
         $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
+    }
+
+    protected function backupFilesAndDirectories()
+    {
+        (new Filesystem)->ensureDirectoryExists(base_path('backups'));
+        $array = [
+            app_path('Http/Controllers/Auth'),
+            app_path('Http/Requests/Auth'),
+            resource_path('views/auth'),
+            resource_path('views/layouts'),
+            base_path('tests/Feature'),
+            base_path('routes/web.php'),
+            base_path('routes/auth.php'),
+            base_path('tailwind.config.js'),
+            base_path('webpack.mix.js'),
+            resource_path('css/app.css'),
+        ];
+        foreach ($array as $item) {
+            $explode = explode('/', $item);
+            $last = $explode[count($explode) - 1];
+            if (file_exists($item)) {
+                copy($item, base_path('backups/'.$last));
+            }
+        }
+
+        return;
     }
 
     /**
@@ -127,5 +156,10 @@ class InstallCommand extends Command
     protected function replaceInFile($search, $replace, $path)
     {
         file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
+    }
+
+    protected function appendToFile($content, $path)
+    {
+        file_put_contents($path, file_get_contents($path)."\n".$content);
     }
 }
