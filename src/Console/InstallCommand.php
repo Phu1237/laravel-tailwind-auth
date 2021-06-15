@@ -15,7 +15,7 @@ class InstallCommand extends Command
      */
     protected $signature = 'auth:install {--c|controllers : Install with controllers}
                             {--e|empty : Install with controllers and empty blade}
-                            {--b|backup : Backup the old files if existed}';
+                            {--b|backup : Backup the old files if it existed}';
 
     /**
      * The console command description.
@@ -100,19 +100,42 @@ class InstallCommand extends Command
             base_path('tests/Feature'),
             base_path('routes/web.php'),
             base_path('routes/auth.php'),
+            app_path('Providers/RouteServiceProvider.php'),
             base_path('tailwind.config.js'),
             base_path('webpack.mix.js'),
             resource_path('css/app.css'),
         ];
         foreach ($array as $item) {
-            $explode = explode('/', $item);
+            $explode = explode('\\', $item);
             $last = $explode[count($explode) - 1];
+            $backup_path = 'backups/'.$last;
             if (file_exists($item)) {
-                copy($item, base_path('backups/'.$last));
+                if (is_file($item)) {
+                    $this->ensureDirectoryOfFileExists($backup_path);
+                    copy($item, base_path($backup_path));
+                } else if (is_dir($item)) {
+                    (new Filesystem)->copyDirectory($item, $backup_path);
+                }
             }
         }
+        $this->info('View backup files at /backups.');
 
         return;
+    }
+
+    /**
+     * Create directory for file if not existed yet
+     *
+     * @param  string $path
+     * @return void
+     */
+    private static function ensureDirectoryOfFileExists($path)
+    {
+        $explode = explode('/', $path);
+        array_pop($explode);
+        $dir = implode('/', $explode);
+
+        (new Filesystem)->ensureDirectoryExists(base_path($dir));
     }
 
     /**
@@ -158,8 +181,16 @@ class InstallCommand extends Command
         file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
     }
 
+    /**
+     * Append content to the end of file
+     *
+     * @param  string $content
+     * @param  string $path
+     * @return void
+     */
     protected function appendToFile($content, $path)
     {
-        file_put_contents($path, file_get_contents($path)."\n".$content);
+        // And line before and after the content
+        file_put_contents($path, file_get_contents($path)."\n".$content."\n");
     }
 }
