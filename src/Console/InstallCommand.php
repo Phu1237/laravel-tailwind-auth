@@ -51,18 +51,18 @@ class InstallCommand extends Command
 
         // Views...
         // Just export if no option --controllers
-        if (!$this->option('controllers')) {
-            (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
-            (new Filesystem)->ensureDirectoryExists(resource_path('views/layouts'));
-
-            (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/auth', resource_path('views/auth'));
-            (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/layouts', resource_path('views/layouts'));
-        } else if ($this->option('empty')) {
+        if ($this->option('empty')) {
             (new Filesystem)->ensureDirectoryExists(resource_path('views_empty/auth'));
             (new Filesystem)->ensureDirectoryExists(resource_path('views_empty/layouts'));
 
             (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views_empty/auth', resource_path('views/auth'));
             (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views_empty/layouts', resource_path('views/layouts'));
+        } else if (!$this->option('controllers')) {
+            (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
+            (new Filesystem)->ensureDirectoryExists(resource_path('views/layouts'));
+
+            (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/auth', resource_path('views/auth'));
+            (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/layouts', resource_path('views/layouts'));
         }
 
         if (!$this->option('controllers')) {
