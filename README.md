@@ -24,11 +24,9 @@ Laravel Tailwind Authentication is powered by Blade and Tailwind.
 
 **Must read before install:**
 
-- The "routes/web.php" will be replaced.
-- The "routes/auth.php" will be placed.
-- The "HOME" path in *app/Providers/RouteServiceProvider.php* will be change from "/home" to "/"
+Please backup or rename your files first to prevent data loss.
 
-Please backup or rename your files before running the command below to prevent data loss.
+You can also run the last command with backup option [here](#options).
 
 ## Getting started
 
@@ -52,6 +50,8 @@ Install package with default files
 php artisan auth:install
 ```
 
+### Options
+
 Install with empty blade files
 
 ```bash
@@ -60,12 +60,28 @@ OR
 php artisan auth:install -e
 ```
 
+Install & backup files
+
+```bash
+php artisan auth:install --backup
+OR
+php artisan auth:install -b
+```
+
 Install with only controllers
 
 ```bash
 php artisan auth:install --controllers
 OR
 php artisan auth:install -c
+```
+
+Note: You can run multi options at once (except run "empty" & "controllers" at once), for example:
+
+```bash
+php artisan auth:install --empty --backup
+OR
+php artisan auth:install -eb
 ```
 
 ## License
