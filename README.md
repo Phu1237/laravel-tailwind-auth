@@ -1,6 +1,6 @@
 # Laravel Tailwind Authentication
 
-![Banner](https://banners.beyondco.de/Laravel%20Tailwind%20Authentication.png?theme=light&packageManager=composer+require&packageName=phu1237%2Flaravel-tailwind-auth&pattern=circuitBoard&style=style_1&description=Simple+Laravel+Authentication+using+Tailwindcss+%26+Blade&md=1&showWatermark=0&fontSize=100px&images=https%3A%2F%2Flaravel.com%2Fimg%2Flogomark.min.svg)
+![Banner](https://banners.beyondco.de/Laravel%20Tailwind%20Authentication.png?theme=light&packageManager=composer+require&packageName=phu1237%2Flaravel-tailwind-auth+--dev&pattern=circuitBoard&style=style_1&description=Simple+Laravel+Authentication+using+Tailwindcss+and+Blade&md=1&showWatermark=0&fontSize=100px&images=https%3A%2F%2Flaravel.com%2Fimg%2Flogomark.min.svg)
 
 ## Introduction
 
