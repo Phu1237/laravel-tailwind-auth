@@ -10,12 +10,15 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
-{/**
- * Determine if the user is authorized to make this request.
- *
- * @return bool
- */public function authorize()
-    {return true;
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
     }
 
     /**
@@ -24,7 +27,8 @@ class LoginRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {return [
+    {
+        return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ];
@@ -33,13 +37,15 @@ class LoginRequest extends FormRequest
     /**
      * Attempt to authenticate the request's credentials.
      *
-     * @throws \Illuminate\Validation\ValidationException
      * @return void
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function authenticate()
-    {$this->ensureIsNotRateLimited();
+    {
+        $this->ensureIsNotRateLimited();
 
-        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {RateLimiter::hit($this->throttleKey());
+        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
@@ -52,11 +58,13 @@ class LoginRequest extends FormRequest
     /**
      * Ensure the login request is not rate limited.
      *
-     * @throws \Illuminate\Validation\ValidationException
      * @return void
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function ensureIsNotRateLimited()
-    {if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {return;
+    {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+            return;
         }
 
         event(new Lockout($this));
@@ -77,6 +85,7 @@ class LoginRequest extends FormRequest
      * @return string
      */
     public function throttleKey()
-    {return Str::lower($this->input('email')).'|'.$this->ip();
+    {
+        return Str::lower($this->input('email')) . '|' . $this->ip();
     }
 }
