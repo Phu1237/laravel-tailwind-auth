@@ -71,9 +71,7 @@ php artisan auth:install -e
 Install with controllers and routes
 
 ```bash
-php artisan auth:install --base
-# or
-php artisan auth:install -b
+php artisan auth:install --core
 ```
 
 Install with only controllers

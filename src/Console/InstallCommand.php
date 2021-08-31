@@ -12,7 +12,7 @@ class InstallCommand extends Command
  *
  * @var string
  */protected $signature = 'auth:install {--c|controllers : Install with controllers}
-                            {--b|base : Install with controllers and routes}
+                            {--core : Install with controllers and routes}
                             {--e|empty : Install with controllers and empty blade}
                             {--b|backup : Backup the old files if it existed}';
 
@@ -29,8 +29,7 @@ class InstallCommand extends Command
      * @return void
      */
     public function handle()
-    {
-        // Backup if command have option backup
+    {// Backup if command have option backup
         if ($this->option('backup')) {$this->backupFilesAndDirectories();
         }
 
@@ -43,7 +42,7 @@ class InstallCommand extends Command
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/App/Http/Requests/Auth', app_path('Http/Requests/Auth'));
 
         // Base install
-        if ($this->option('base')) {// Routes...
+        if ($this->option('core')) {// Routes...
             $this->appendToFile('require __DIR__.\'/auth.php\';', base_path('routes/web.php'));
             copy(__DIR__.'/../../stubs/routes/auth.php', base_path('routes/auth.php'));
             // Replace the HOME path to '/'
@@ -51,7 +50,7 @@ class InstallCommand extends Command
         }
 
         // Just export if no option --controllers
-        if (!$this->option('controllers') && !$this->option('base')) {// Views...
+        if (!$this->option('controllers') && !$this->option('core')) {// Views...
             (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
             (new Filesystem)->ensureDirectoryExists(resource_path('views/layouts'));
             // Empty blade
