@@ -52,19 +52,27 @@ php artisan auth:install
 
 ### Options
 
-Install with empty blade files
-
-```bash
-php artisan auth:install --empty
-OR
-php artisan auth:install -e
-```
-
 Install & backup files
 
 ```bash
 php artisan auth:install --backup
-OR
+# or
+php artisan auth:install -b
+```
+
+Install with empty blade files
+
+```bash
+php artisan auth:install --empty
+# or
+php artisan auth:install -e
+```
+
+Install with controllers and routes
+
+```bash
+php artisan auth:install --base
+# or
 php artisan auth:install -b
 ```
 
@@ -72,15 +80,15 @@ Install with only controllers
 
 ```bash
 php artisan auth:install --controllers
-OR
+# or
 php artisan auth:install -c
 ```
 
-Note: You can run multi options at once (except run "empty" & "controllers" at once), for example:
+Note: You can run "backup" option with any option you want at once, for example:
 
 ```bash
 php artisan auth:install --empty --backup
-OR
+# or
 php artisan auth:install -eb
 ```
 
